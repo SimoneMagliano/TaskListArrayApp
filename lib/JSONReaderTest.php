@@ -1,9 +1,6 @@
 <?php
-/**
- * NOTA: Il test deve essere lanciato dalla cartella lib
- */
 declare(strict_types=1);
-require "../../../vendor/testTools/testTool.php";
+require "../vendor/testTools/testTool.php";
 require "./JSONReader.php";
 
 system("clear");
@@ -13,7 +10,7 @@ echo testHeader(__FILE__);
 $dataset = [
     [
         'description' => 'Gestione dell\'errore per file inesistente',
-        'filepath' => './ciccio.json',
+        'filepath' => './tonno.json',
         'error' => 'not-exists',
         'errorCode' => 404
     ],

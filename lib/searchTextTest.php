@@ -1,6 +1,6 @@
 <?php
-require "./vendor/testTools/testTool.php";
-require "./case_study/tasklistArray/lib/searchFunctions.php";
+require "../vendor/testTools/testTool.php";
+require "./lib/searchFunctions.php";
 
 $testCases = [
     [
@@ -57,16 +57,9 @@ $mockTaskList = array(
     array("id"=>6695,"taskName"=>"Tornare a Redmond (windows 10)","status"=>"todo","expirationDate"=>"2021-11-13")
 );
 
-
 foreach ($testCases as $testCase) {
     extract($testCase);
-    
-    // $searchText = $testCase['searchText'];
-    // $expectedCount = $testCase['expectedCount'];
-    // $description = $testCase['description'];
-
     $actual = array_filter($mockTaskList, searchText($searchText));
-    
     assertEquals('array', gettype($actual),'il risultato è un ');
     assertEquals($expectedCount, count($actual), $description);
 }
