@@ -1,9 +1,26 @@
 <?php
-require './lib/JSONReader.php';
 
-$elenco=JSONReader('./dataset/TaskList.json');
+require "./lib/JSONReader.php";
+require "./lib/searchFunctions.php";
+
+$taskList = JSONReader('./dataset/TaskList.json');
+
+if (isset($_GET['searchText'])) {
+    $searchText = trim(filter_var($_GET['searchText'], FILTER_SANITIZE_STRING));
+    $taskList = array_filter($taskList, searchText($searchText));
+}
+
+if ((isset($_GET['status']))) {
+    $status = $_GET['status'];
+    $taskList = array_filter($taskList, searchStatus($status));
+}
+
+if(isset($_GET['status'])==''){
+    $_GET['status']='all';
+}
 
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,8 +37,28 @@ $elenco=JSONReader('./dataset/TaskList.json');
             <h1 class="display-1">Tasklist</h1>
         </div>
     </div>
- <form action="index.php">
+ 
     <div class="container">
+
+        <form action="./index.php">
+            <input type="text" value="<?=  $searchText ?>" name="searchText" >
+            <button type="submit">cerca</button>
+
+            <div id="status">
+
+                <input type="radio" name="status" value="progress" id="progress">
+                <label for="progress">progress</label>
+
+                <input type="radio" name="status" value="done" id="done">
+                <label for="done">done</label>
+
+                <input type="radio" name="status" value="todo" id="todo">
+                <label for="todo">todo</label>
+
+                <input type="radio" name="status" value="all" id="all">
+                <label for="all">all</label>
+            </div>
+            </form>
         <div class="input-group pb-3 my-1">
             <label class="w-100 pb-1 fw-bold" for="searchText">Cerca</label>
             <input id="searchText"  type="text" class="form-control" placeholder="attività da cercare">
@@ -29,7 +66,6 @@ $elenco=JSONReader('./dataset/TaskList.json');
               <button class="btn btn-primary" type="button">Invia</button>
             </div>
         </div>
-
         <div id="status-radio" class=" mb-3">
             <div class="fw-bold pe-2 w-100">Stato attività</div>
               <div class="form-check form-check-inline">
@@ -49,7 +85,6 @@ $elenco=JSONReader('./dataset/TaskList.json');
                 <label class="form-check-label" >fatto</label>
               </div>
         </div>
-    
         <section class="tasklist mt-3">
             <h1 class="fw-bold fs-6">Elenco delle attività</h1>
             <table class="table">
@@ -57,33 +92,12 @@ $elenco=JSONReader('./dataset/TaskList.json');
                     <th class="w-100">nome</th>
                     <th class="text-center">stato</th>
                     <th class="text-center">data</th>
-                </tr>
-                
-                <tr>
-                <?php 
-                    foreach ($elenco as $key => $task) { 
-                    
-                        $status = $task['status'];
-                        $taskName = $task['taskName'];
-                        $date= $task['expirationDate'];
-                     
-                ?>
-                    <td><?= $taskName ?> </td>
-                    <td class="text-center">
-                        <span class="badge bg-secondary text-uppercase"><?= $status ?></span>
-                    </td>
-              
-                    <td class="text-nowrap">
-                    <?= $date ?>
-                    </td>
-                </tr>
-                <?php } ?>
-                <tr>
+                </tr>          
             </table>
 
         </section>
     </div>
-    </form>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
 </body>
 </html>
